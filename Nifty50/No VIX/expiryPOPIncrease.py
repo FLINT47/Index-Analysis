@@ -41,6 +41,8 @@ probabilities_expiry = within_avg_expiry / total_expiry_days
 # Plotting the probabilities for expiry days
 plt.figure(figsize=(12, 6))
 plt.plot(probabilities_expiry.index, probabilities_expiry.values, marker='o', linestyle='-')
+for year, prob in probabilities_expiry.items():
+    plt.text(year, prob, f'{prob:.2f}', ha='center', va='bottom')
 plt.title('Probability of Market Remaining Within Average Length on Expiry Days (2019 Onwards)')
 plt.xlabel('Year')
 plt.ylabel('Probability')

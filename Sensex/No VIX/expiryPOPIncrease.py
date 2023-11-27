@@ -17,8 +17,11 @@ data_from_2023 = data[data['date'] >= pd.to_datetime("2023-05-15")]
 # Generate all Fridays as potential expiry dates from May 15, 2023 onwards
 fridays = pd.date_range(start='2023-05-15', end='2024-05-14', freq='W-FRI')
 
-# Adjust for market holidays
-expiry_day_data = data_from_2023[data_from_2023['date'].isin(fridays)]
+# Adjust for market holidays: if a Friday is a holiday (not in data), use the previous business day
+adjusted_fridays = [date - BDay(1) if date not in data_from_2023['date'].values else date for date in fridays]
+
+# Filter the data for adjusted expiry days
+expiry_day_data = data_from_2023[data_from_2023['date'].isin(adjusted_fridays)]
 
 # Group by year_month and calculate average candle length for expiry days
 month_avg_candle_length_expiry = expiry_day_data.groupby('year_month')['candle_length'].mean()
